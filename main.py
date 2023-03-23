@@ -9,6 +9,8 @@ import datetime
 if __name__ == "__main__":
     #로그 info로 설정
     logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
     #인스턴스 생성
     urlAddress = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"
     serviceKey = "bFYmAkU3nFuv7MLgqjMAMr3aQk6p0vhZ5vVhLiP9FNjU1BRq42Xp9Z8VtFZ7CEOAue71mmjc44GZsDrIW5fjbQ=="
@@ -27,24 +29,27 @@ if __name__ == "__main__":
     end_date = datetime.date(2023, 3, 1)
 
     while start_date < end_date:
-        print(start_date.strftime("%Y%m"))
-        logging.INFO("YEAR MONTH : %s", start_date.strftime("%Y%m"))
+        # print(start_date.strftime("%Y%m"))
+        current_date = start_date.strftime("%Y%m")
+        print("type of current_date : ", type(current_date))
+        logger.info("YEAR MONTH : %s", current_date)
         params = dict()
         params["DEAL_YMD"] = start_date.strftime("%Y%m")
         for idx, i in enumerate(LAWD_CD) :
             params["LAWD_CD"] = i
-            logging.INFO("LAWD_CD : %s, 지역명 : %s", i, LAWD_CD_NAME[idx])
+            logger.info("LAWD_CD : %s, 지역명 : %s", i, LAWD_CD_NAME[idx])
             response = sendRequest.sendGetRequest(params)
             #응답
             print(response.text)
-            #응답 xml 파일로 저장
-            with open("response_" + start_date.strftime("%Y%m") + "_" + i + ".xml", "w") as f:
-                f.write(response.text)
-            #응답 xml 파일을 엑셀 파일로 저장
-            tree = ET.parse("response_" + start_date.strftime("%Y%m") + "_" + i + ".xml")
-            root = tree.getroot()
-            wb = Workbook()
-            ws = wb.active
+            logger.info("response : %d", response.status_code)
+            # #응답 xml 파일로 저장
+            # with open("response_" + start_date.strftime("%Y%m") + "_" + i + ".xml", "w") as f:
+            #     f.write(response.text)
+            # #응답 xml 파일을 엑셀 파일로 저장
+            # tree = ET.parse("response_" + start_date.strftime("%Y%m") + "_" + i + ".xml")
+            # root = tree.getroot()
+            # wb = Workbook()
+            # ws = wb.active
 
         #월 증가
         start_date = start_date.replace(month=start_date.month + 1)
