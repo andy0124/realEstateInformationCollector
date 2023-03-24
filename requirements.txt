@@ -1,0 +1,8 @@
+certifi @ file:///C:/b/abs_85o_6fm0se/croot/certifi_1671487778835/work/certifi
+charset-normalizer==3.1.0
+et-xmlfile==1.1.0
+idna==3.4
+openpyxl==3.1.2
+requests==2.28.2
+urllib3==1.26.15
+wincertstore==0.2
