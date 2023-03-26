@@ -38,29 +38,22 @@ if __name__ == "__main__":
         params = dict()
         params["DEAL_YMD"] = start_date.strftime("%Y%m")
 
-        wb = Workbook()
-        ws = wb.active
 
         for idx, i in enumerate(LAWD_CD):
             params["LAWD_CD"] = i
             logger.info("LAWD_CD : %s, 지역명 : %s", i, LAWD_CD_NAME[idx])
             response = sendRequest.sendGetRequest(params)
             # 응답
-            print(response.text)
             logger.info("response : %d", response.status_code)
             # xml 형태의 response를 엑셀로 저장
-            tree = ET.ElementTree(ET.fromstring(response.text))
-            root = tree.getroot()
 
-            for index, child in enumerate(root):
-                for j, ch in enumerate(child):
-                    ws.cell(row=index + 1, column=j + 1).value = ch.text
+            with open("C:\\Users\\andy0\\PycharmProjects\\realEstateInformationCollector\\data\\Apartment_price_{}.xml".format(start_date.strftime("%Y%m")), "w", encoding="utf-8") as f:
+                f.write(response.text)
 
-        wb.save("C:\\Users\\andy0\PycharmProjects\\realEstateInformationCollector\\realEastate_{}.xlsx".format(
-            start_date.strftime("%Y%m")))
 
         # 월 증가
         temp_month = start_date.month + 1
-        if temp_month > 12:
-            temp_month = 1
-        start_date = start_date.replace(month=temp_month)
+        if start_date.month == 12:
+            start_date = start_date.replace(year=start_date.year + 1, month=1)
+        else:
+            start_date = start_date.replace(month=start_date.month + 1)
