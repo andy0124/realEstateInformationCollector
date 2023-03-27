@@ -27,11 +27,15 @@ if __name__ == "__main__":
     # LAWD_CD 지역명 리스트
     LAWD_CD_NAME = ["종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구",
                     "양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구"]
-    start_date = datetime.date(2022, 12, 1)
+    start_date = datetime.date(2022, 1, 1)
     end_date = datetime.date(2023, 3, 1)
+    isError = False
 
     while start_date < end_date:
         # print(start_date.strftime("%Y%m"))
+        if isError:
+            logger.warn("Last Data - YEAR MONTH : {}".format(start_date.strftime("%Y%m")))
+            break
         current_date = start_date.strftime("%Y%m")
         print("type of current_date : ", type(current_date))
         logger.info("YEAR MONTH : %s", current_date)
@@ -39,15 +43,21 @@ if __name__ == "__main__":
         params["DEAL_YMD"] = start_date.strftime("%Y%m")
 
 
+
         for idx, i in enumerate(LAWD_CD):
             params["LAWD_CD"] = i
             logger.info("LAWD_CD : %s, 지역명 : %s", i, LAWD_CD_NAME[idx])
             response = sendRequest.sendGetRequest(params)
+            if response.status_code != 200:
+                logger.warn("Error occured. Stop the program")
+                logger.warn("Last Data - Area Code : {}".format(LAWD_CD_NAME[idx]))
+                isError = True
+                break
             # 응답
             logger.info("response : %d", response.status_code)
             # xml 형태의 response를 엑셀로 저장
 
-            with open("C:\\Users\\andy0\\PycharmProjects\\realEstateInformationCollector\\data\\Apartment_price_{}.xml".format(start_date.strftime("%Y%m")), "w", encoding="utf-8") as f:
+            with open("data\\Apartment_price_{}_{}.xml".format(start_date.strftime("%Y%m"),LAWD_CD_NAME[idx]), "w", encoding="utf-8") as f:
                 f.write(response.text)
 
 
