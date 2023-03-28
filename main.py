@@ -11,8 +11,12 @@ if __name__ == "__main__":
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     # 인스턴스 생성
-    urlAddress = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"
-    serviceKey = "bFYmAkU3nFuv7MLgqjMAMr3aQk6p0vhZ5vVhLiP9FNjU1BRq42Xp9Z8VtFZ7CEOAue71mmjc44GZsDrIW5fjbQ=="
+
+    #서비스 조회에 필요한 정보 입력란
+    urlAddress = ""
+    serviceKey = ""
+
+
     sendRequest = sendRequest.sendRequest(urlAddress, serviceKey)
     # 파라미터 생성
     # params = {
@@ -31,13 +35,11 @@ if __name__ == "__main__":
     end_date = datetime.date(2023, 3, 1)
     isError = False
 
-    while start_date < end_date:
-        # print(start_date.strftime("%Y%m"))
+    while start_date <= end_date:
         if isError:
-            logger.warn("Last Data - YEAR MONTH : {}".format(start_date.strftime("%Y%m")))
+            logger.info("Stop the loop")
             break
         current_date = start_date.strftime("%Y%m")
-        print("type of current_date : ", type(current_date))
         logger.info("YEAR MONTH : %s", current_date)
         params = dict()
         params["DEAL_YMD"] = start_date.strftime("%Y%m")
@@ -51,13 +53,17 @@ if __name__ == "__main__":
             if response.status_code != 200:
                 logger.warn("Error occured. Stop the program")
                 logger.warn("Last Data - Area Code : {}".format(LAWD_CD_NAME[idx]))
+                logger.warn("Last Data - YEAR MONTH : {}".format(start_date.strftime("%Y%m")))
                 isError = True
                 break
             # 응답
             logger.info("response : %d", response.status_code)
             # xml 형태의 response를 엑셀로 저장
 
-            with open("data\\Apartment_price_{}_{}.xml".format(start_date.strftime("%Y%m"),LAWD_CD_NAME[idx]), "w", encoding="utf-8") as f:
+            # with open("data\\Apartment_price_{}_{}.xml".format(start_date.strftime("%Y%m"),LAWD_CD_NAME[idx]), "w", encoding="utf-8") as f:
+            #     f.write(response.text)
+
+            with open("data\\Apartment_Rent_{}_{}.xml".format(start_date.strftime("%Y%m"),LAWD_CD_NAME[idx]), "w", encoding="utf-8") as f:
                 f.write(response.text)
 
 
@@ -67,3 +73,5 @@ if __name__ == "__main__":
             start_date = start_date.replace(year=start_date.year + 1, month=1)
         else:
             start_date = start_date.replace(month=start_date.month + 1)
+
+    logger.info("Program End")

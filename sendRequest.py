@@ -36,8 +36,8 @@ if __name__ == "__main__":
     # 로깅 설정
     logging.basicConfig(level=logging.INFO)
     # 인스턴스 생성
-    urlAddress = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"
-    serviceKey = "bFYmAkU3nFuv7MLgqjMAMr3aQk6p0vhZ5vVhLiP9FNjU1BRq42Xp9Z8VtFZ7CEOAue71mmjc44GZsDrIW5fjbQ=="
+    urlAddress = ""
+    serviceKey = ""
     sendRequest = sendRequest(urlAddress, serviceKey)
     # 파라미터 생성
     params = {
