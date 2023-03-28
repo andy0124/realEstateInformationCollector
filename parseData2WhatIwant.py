@@ -13,7 +13,7 @@ class parseData2WhatIwant(parseXML2EXCEL):
 
 
 if __name__ == "__main__":
-    xml_file = "data.xml"
+    xml_file = "data/Apartment_Price/Apartment_price_202201_강남구.xml"
     excel_file = "data.xlsx"
     parseData2WhatIwant = parseData2WhatIwant(xml_file, excel_file)
     parseData2WhatIwant.parse()
